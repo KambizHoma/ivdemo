@@ -1,8 +1,8 @@
-# ivdemo v1
+# ivdemo v1.1
 
 **Fast Hardware Needs Smart Algorithms**
 
-A demonstration of Peter Jäckel's LetsBeRational algorithm for calculating Black-Scholes implied volatility with optimal speed and precision.
+A demonstration of Peter Jäckel's LetsBeRational algorithm for calculating Black-Scholes implied volatility with optimal speed and precision, now featuring volatility smile visualization.
 
 ## Overview
 
@@ -14,10 +14,19 @@ This Streamlit application showcases how algorithmic efficiency delivers perform
 
 ## Features
 
+**v1.1 - Current Version:**
+- Two-tab interface: Single IV calculation and Volatility Smile visualization
+- Interactive volatility smile construction with synthetic data
+- Real-time performance metrics across multiple strikes
+- All parameters in sidebar for clean interface
+- Plotly interactive charts with hover tooltips
+
+**Core Capabilities:**
 - Interactive parameter sliders for option pricing inputs
 - Real-time implied volatility calculation
 - Performance metrics display (time, iterations, status)
 - Numba JIT compilation with automatic warmup
+- Round-trip testing methodology for accuracy validation
 - Clean, professional UI
 
 ## Technology Stack
@@ -26,6 +35,7 @@ This Streamlit application showcases how algorithmic efficiency delivers perform
 - **py_vollib** - Jäckel's LetsBeRational implementation
 - **Numba** - JIT compilation for near-C performance
 - **NumPy** - Numerical computing
+- **Plotly** - Interactive data visualization
 
 ## Local Development
 
@@ -94,8 +104,8 @@ Developed by Peter Jäckel (2015), this algorithm:
 
 ## Roadmap
 
-- **v1.0** (Current): Single IV calculation demo
-- **v1.1**: Volatility smile visualization
+- **v1.0** ✅ Single IV calculation demo
+- **v1.1** ✅ Volatility smile visualization (Current)
 - **v2.0**: Comparison with other methods (Newton-Raphson, Brenner-Subrahmanyam)
 - **v3.0**: Full analytics suite with charts and batch testing
 
