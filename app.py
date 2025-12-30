@@ -12,6 +12,13 @@ import numpy as np
 from py_vollib.black_scholes.implied_volatility import implied_volatility
 from py_vollib.black_scholes import black_scholes
 
+# MUST be first Streamlit command
+st.set_page_config(
+    page_title="ivdemo - Jaeckel IV Calculator",
+    page_icon="⚡",
+    layout="wide"
+)
+
 
 @st.cache_resource
 def warmup_numba():
@@ -28,7 +35,6 @@ def warmup_numba():
         _ = implied_volatility(5.0, 100.0, 100.0, 0.25, 0.05, 'c')
         return True
     except Exception as e:
-        st.error(f"Warmup failed: {e}")
         return False
 
 
@@ -71,13 +77,6 @@ def calculate_iv_with_timing(price, S, K, T, r, flag='c'):
 def main():
     # Warmup on app load
     warmup_complete = warmup_numba()
-    
-    # Page config
-    st.set_page_config(
-        page_title="ivdemo - Jaeckel IV Calculator",
-        page_icon="⚡",
-        layout="wide"
-    )
     
     # Header
     st.title("Fast Hardware Needs Smart Algorithms")
