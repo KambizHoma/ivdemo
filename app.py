@@ -145,6 +145,10 @@ def main():
     # Warmup
     warmup_complete = warmup_numba()
     
+    # Initialize session state for smile chart persistence
+    if 'smile_data' not in st.session_state:
+        st.session_state.smile_data = None
+    
     # Monochrome theme CSS
     st.markdown("""
         <style>
@@ -404,6 +408,24 @@ def main():
                 errors = np.abs(recovered_ivs - true_sigmas)
                 max_error = errors.max()
                 mean_error = errors.mean()
+                
+                # Store in session state
+                st.session_state.smile_data = {
+                    'strikes': strikes,
+                    'true_sigmas': true_sigmas,
+                    'recovered_ivs': recovered_ivs,
+                    'total_time_ms': total_time_ms,
+                    'n_strikes': n_strikes,
+                    'max_error': max_error,
+                    'mean_error': mean_error,
+                    'S': S,
+                    'sigma_atm': sigma_atm,
+                    'curvature': curvature
+                }
+        
+        # Display chart if data exists in session state
+        if st.session_state.smile_data is not None:
+            data = st.session_state.smile_data
             
             st.markdown("### Volatility Smile")
             
@@ -412,8 +434,8 @@ def main():
             
             # True smile
             fig.add_trace(go.Scatter(
-                x=strikes/S,
-                y=true_sigmas * 100,
+                x=data['strikes']/data['S'],
+                y=data['true_sigmas'] * 100,
                 mode='lines',
                 name='True Smile (Input)',
                 line=dict(color='#b0b0b0', width=3, dash='dash'),
@@ -422,8 +444,8 @@ def main():
             
             # Recovered smile
             fig.add_trace(go.Scatter(
-                x=strikes/S,
-                y=recovered_ivs * 100,
+                x=data['strikes']/data['S'],
+                y=data['recovered_ivs'] * 100,
                 mode='markers+lines',
                 name='Recovered (Jaeckel)',
                 line=dict(color='#4a4a4a', width=2),
@@ -456,19 +478,19 @@ def main():
             with perf_col1:
                 st.metric(
                     label="Strikes Calculated",
-                    value=n_strikes
+                    value=data['n_strikes']
                 )
             
             with perf_col2:
                 st.metric(
                     label="Total Time",
-                    value=f"{total_time_ms:.2f} ms"
+                    value=f"{data['total_time_ms']:.2f} ms"
                 )
             
             with perf_col3:
                 st.metric(
                     label="Avg per Strike",
-                    value=f"{total_time_ms/n_strikes:.4f} ms"
+                    value=f"{data['total_time_ms']/data['n_strikes']:.4f} ms"
                 )
             
             with perf_col4:
@@ -478,13 +500,13 @@ def main():
                 )
             
             st.success(
-                f"✓ All {n_strikes} calculations converged in 2 iterations to machine precision"
+                f"✓ All {data['n_strikes']} calculations converged in 2 iterations to machine precision"
             )
             
             # Accuracy info
             st.info(
-                f"**Recovery Accuracy:** Max error = {max_error:.2e}, "
-                f"Mean error = {mean_error:.2e} (near machine precision)"
+                f"**Recovery Accuracy:** Max error = {data['max_error']:.2e}, "
+                f"Mean error = {data['mean_error']:.2e} (near machine precision)"
             )
             
             # Methodology explanation
@@ -492,16 +514,16 @@ def main():
                 st.markdown(f"""
                 **Synthetic Smile Generation (Round-Trip Test):**
                 
-                1. **Define theoretical smile:** σ(K) = {sigma_atm:.2f} + {curvature:.2f}·(K/S - 1)²
+                1. **Define theoretical smile:** σ(K) = {data['sigma_atm']:.2f} + {data['curvature']:.2f}·(K/S - 1)²
                 2. **Generate option prices:** Use Black-Scholes with σ(K) for each strike
                 3. **Recover IV:** Use Jaeckel's algorithm to back out implied volatility
                 4. **Verify:** Compare recovered IV to theoretical σ(K)
                 
-                **Strike Range:** {strikes.min():.2f} to {strikes.max():.2f} (80%-120% of spot)
+                **Strike Range:** {data['strikes'].min():.2f} to {data['strikes'].max():.2f} (80%-120% of spot)
                 
                 **Perfect recovery demonstrates:**
                 - Jaeckel's machine-precision accuracy (~10⁻¹⁵ error)
-                - Consistent speed across {n_strikes} calculations
+                - Consistent speed across {data['n_strikes']} calculations
                 - Production-ready reliability
                 
                 This round-trip test validates both speed and precision of the algorithm
