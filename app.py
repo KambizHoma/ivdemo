@@ -193,31 +193,6 @@ def main():
         /* Sidebar styling */
         [data-testid="stSidebar"] {
             background-color: #fafafa;
-            font-size: 0.9rem;
-        }
-        
-        /* Sidebar parameter labels */
-        .param-label {
-            display: flex;
-            align-items: center;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #262626;
-            margin-bottom: 0.5rem;
-        }
-        
-        .param-symbol {
-            font-family: 'Times New Roman', serif;
-            font-style: italic;
-            font-size: 1.1rem;
-            margin-right: 0.3rem;
-        }
-        
-        .help-icon {
-            color: #808080;
-            font-size: 0.85rem;
-            margin-left: 0.25rem;
-            cursor: help;
         }
         
         /* Section headers in sidebar */
@@ -228,25 +203,6 @@ def main():
             margin-bottom: 0.8rem;
             border-bottom: 1px solid #d0d0d0;
             padding-bottom: 0.3rem;
-        }
-        
-        /* Number input styling */
-        [data-testid="stSidebar"] input[type="number"] {
-            font-size: 0.9rem;
-        }
-        
-        /* Tab styling - monochrome */
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 2px;
-        }
-        .stTabs [data-baseweb="tab"] {
-            background-color: #e8e8e8;
-            color: #4a4a4a;
-            border-radius: 4px 4px 0 0;
-        }
-        .stTabs [aria-selected="true"] {
-            background-color: #4a4a4a;
-            color: white;
         }
         
         /* Plotly chart background */
@@ -271,67 +227,88 @@ def main():
     # Market Parameters Section
     st.sidebar.markdown("### Market Parameters")
     
-    col1, col2 = st.sidebar.columns([1, 2])
+    S = st.sidebar.number_input(
+        "S",
+        min_value=50.0,
+        max_value=150.0,
+        value=100.0,
+        step=1.0,
+        help="Spot Price: Current market price of the underlying asset"
+    )
     
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">S</span><span class="help-icon" title="Spot Price: Current market price of the underlying asset">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        S = st.number_input("S", min_value=50.0, max_value=150.0, value=100.0, step=1.0, label_visibility="collapsed", key="S_input")
+    T = st.sidebar.number_input(
+        "T",
+        min_value=0.01,
+        max_value=2.0,
+        value=0.25,
+        step=0.01,
+        format="%.2f",
+        help="Time to Expiry: Time to expiration in years (0.25 = 3 months)"
+    )
     
-    col1, col2 = st.sidebar.columns([1, 2])
-    
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">T</span><span class="help-icon" title="Time to Expiry: Time to expiration in years (0.25 = 3 months)">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        T = st.number_input("T", min_value=0.01, max_value=2.0, value=0.25, step=0.01, format="%.2f", label_visibility="collapsed", key="T_input")
-    
-    col1, col2 = st.sidebar.columns([1, 2])
-    
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">r</span><span class="help-icon" title="Risk-free Rate: Annual risk-free interest rate (0.05 = 5%)">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        r = st.number_input("r", min_value=0.0, max_value=0.10, value=0.05, step=0.01, format="%.2f", label_visibility="collapsed", key="r_input")
+    r = st.sidebar.number_input(
+        "r",
+        min_value=0.0,
+        max_value=0.10,
+        value=0.05,
+        step=0.01,
+        format="%.2f",
+        help="Risk-free Rate: Annual risk-free interest rate (0.05 = 5%)"
+    )
     
     # Single IV Parameters Section
     st.sidebar.markdown("### Single IV Parameters")
     
-    col1, col2 = st.sidebar.columns([1, 2])
+    K = st.sidebar.number_input(
+        "K",
+        min_value=50.0,
+        max_value=150.0,
+        value=110.0,
+        step=1.0,
+        help="Strike Price: Exercise price of the option"
+    )
     
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">K</span><span class="help-icon" title="Strike Price: Exercise price of the option">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        K = st.number_input("K", min_value=50.0, max_value=150.0, value=110.0, step=1.0, label_visibility="collapsed", key="K_input")
-    
-    col1, col2 = st.sidebar.columns([1, 2])
-    
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">p</span><sub>c</sub><span class="help-icon" title="Call Option Price: Market price of the call option">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        price = st.number_input("pc", min_value=0.1, max_value=50.0, value=7.5, step=0.1, format="%.1f", label_visibility="collapsed", key="price_input")
+    price = st.sidebar.number_input(
+        "pₒ",
+        min_value=0.1,
+        max_value=50.0,
+        value=7.5,
+        step=0.1,
+        format="%.1f",
+        help="Call Option Price: Market price of the call option"
+    )
     
     # Smile Parameters Section
     st.sidebar.markdown("### Smile Parameters")
     
-    col1, col2 = st.sidebar.columns([1, 2])
+    sigma_atm = st.sidebar.number_input(
+        "σ_ATM",
+        min_value=0.10,
+        max_value=0.80,
+        value=0.25,
+        step=0.01,
+        format="%.2f",
+        help="ATM Volatility: At-the-money volatility level"
+    )
     
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">σ</span><sub>ATM</sub><span class="help-icon" title="ATM Volatility: At-the-money volatility level">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        sigma_atm = st.number_input("sigma_atm", min_value=0.10, max_value=0.80, value=0.25, step=0.01, format="%.2f", label_visibility="collapsed", key="sigma_input")
+    curvature = st.sidebar.number_input(
+        "a",
+        min_value=0.0,
+        max_value=1.0,
+        value=0.5,
+        step=0.05,
+        format="%.2f",
+        help="Smile Curvature: Parameter in σ(K) = σ_ATM + a×(K/S-1)²"
+    )
     
-    col1, col2 = st.sidebar.columns([1, 2])
-    
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">a</span><span class="help-icon" title="Smile Curvature: Parameter in σ(K) = σ_ATM + a×(K/S-1)²">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        curvature = st.number_input("a", min_value=0.0, max_value=1.0, value=0.5, step=0.05, format="%.2f", label_visibility="collapsed", key="curve_input")
-    
-    col1, col2 = st.sidebar.columns([1, 2])
-    
-    with col1:
-        st.markdown('<div class="param-label"><span class="param-symbol">N</span><sub>s</sub><span class="help-icon" title="Number of Strikes: Number of strike prices to generate for smile">❓</span></div>', unsafe_allow_html=True)
-    with col2:
-        n_strikes = st.number_input("Ns", min_value=10, max_value=100, value=35, step=5, label_visibility="collapsed", key="n_input")
+    n_strikes = st.sidebar.number_input(
+        "Nₛ",
+        min_value=10,
+        max_value=100,
+        value=35,
+        step=5,
+        help="Number of Strikes: Number of strike prices to generate for smile"
+    )
     
     # Tabs
     tab1, tab2 = st.tabs(["Single IV Calculation", "Volatility Smile"])
