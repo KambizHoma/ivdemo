@@ -145,6 +145,28 @@ def main():
     # Warmup
     warmup_complete = warmup_numba()
     
+    # Custom CSS for smaller sidebar text
+    st.markdown("""
+        <style>
+        [data-testid="stSidebar"] {
+            font-size: 0.85rem;
+        }
+        [data-testid="stSidebar"] .stSlider label {
+            font-size: 0.85rem;
+        }
+        [data-testid="stSidebar"] h2 {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        [data-testid="stSidebar"] h3 {
+            font-size: 0.95rem;
+            margin-top: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
     # Header
     st.title("Fast Hardware Needs Smart Algorithms")
     st.subheader("Nippotica Fast Financial Computing")
@@ -157,7 +179,7 @@ def main():
     # Sidebar for all parameters
     st.sidebar.header("Parameters")
     
-    # Market parameters
+    # Market parameters (shared by both tabs)
     st.sidebar.subheader("Market Parameters")
     S = st.sidebar.slider(
         "Spot Price (S)",
@@ -187,6 +209,57 @@ def main():
         help="Annual risk-free interest rate (0.05 = 5%)"
     )
     
+    # Single IV parameters
+    st.sidebar.subheader("Single IV Parameters")
+    K = st.sidebar.slider(
+        "Strike Price (K)",
+        min_value=50.0,
+        max_value=150.0,
+        value=110.0,
+        step=1.0,
+        help="Exercise price of the option"
+    )
+    
+    price = st.sidebar.slider(
+        "Call Option Price",
+        min_value=0.1,
+        max_value=50.0,
+        value=7.5,
+        step=0.1,
+        help="Market price of the call option"
+    )
+    
+    # Smile parameters
+    st.sidebar.subheader("Smile Parameters")
+    sigma_atm = st.sidebar.slider(
+        "ATM Volatility (σ_ATM)",
+        min_value=0.10,
+        max_value=0.80,
+        value=0.25,
+        step=0.01,
+        format="%.2f",
+        help="At-the-money volatility level"
+    )
+    
+    curvature = st.sidebar.slider(
+        "Smile Curvature (a)",
+        min_value=0.0,
+        max_value=1.0,
+        value=0.5,
+        step=0.05,
+        format="%.2f",
+        help="Smile curvature parameter: σ(K) = σ_ATM + a*(K/S-1)²"
+    )
+    
+    n_strikes = st.sidebar.slider(
+        "Number of Strikes",
+        min_value=10,
+        max_value=100,
+        value=35,
+        step=5,
+        help="Number of strike prices to generate"
+    )
+    
     # Tabs
     tab1, tab2 = st.tabs(["Single IV Calculation", "Volatility Smile"])
     
@@ -194,31 +267,7 @@ def main():
     with tab1:
         st.header("Jaeckel LetsBeRational - Single IV Calculation")
         st.markdown("Calculate implied volatility for a single option")
-        
-        st.subheader("Option Parameters")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            K = st.slider(
-                "Strike Price (K)",
-                min_value=50.0,
-                max_value=150.0,
-                value=110.0,
-                step=1.0,
-                help="Exercise price of the option",
-                key="single_K"
-            )
-        
-        with col2:
-            price = st.slider(
-                "Call Option Price",
-                min_value=0.1,
-                max_value=50.0,
-                value=7.5,
-                step=0.1,
-                help="Market price of the call option",
-                key="single_price"
-            )
+        st.markdown("*Adjust parameters in the sidebar*")
         
         st.markdown("---")
         
@@ -288,43 +337,7 @@ def main():
     with tab2:
         st.header("Volatility Smile Construction")
         st.markdown("Generate and recover a synthetic volatility smile using Jaeckel's algorithm")
-        
-        st.subheader("Smile Parameters")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            sigma_atm = st.slider(
-                "ATM Volatility (σ_ATM)",
-                min_value=0.10,
-                max_value=0.80,
-                value=0.25,
-                step=0.01,
-                format="%.2f",
-                help="At-the-money volatility level",
-                key="smile_sigma"
-            )
-            
-            n_strikes = st.slider(
-                "Number of Strikes",
-                min_value=10,
-                max_value=100,
-                value=35,
-                step=5,
-                help="Number of strike prices to generate",
-                key="smile_strikes"
-            )
-        
-        with col2:
-            curvature = st.slider(
-                "Smile Curvature (a)",
-                min_value=0.0,
-                max_value=1.0,
-                value=0.5,
-                step=0.05,
-                format="%.2f",
-                help="Smile curvature parameter: σ(K) = σ_ATM + a*(K/S-1)²",
-                key="smile_curvature"
-            )
+        st.markdown("*Adjust parameters in the sidebar*")
         
         st.markdown("---")
         
