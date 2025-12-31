@@ -319,7 +319,13 @@ def main():
     
     # TAB 1: Single IV Calculation
     with tab1:
-        if st.button("▶️", type="primary", use_container_width=True, key="calc_button"):
+        st.header("Jaeckel LetsBeRational - Single IV Calculation")
+        st.markdown("Calculate implied volatility for a single option")
+        st.markdown("*Adjust parameters in the sidebar*")
+        
+        st.markdown("---")
+        
+        if st.button("Calculate Implied Volatility", type="primary", use_container_width=True):
             with st.spinner("Calculating..."):
                 iv, time_ms, iterations, status = calculate_iv_with_timing(
                     price, S, K, T, r, flag='c'
@@ -380,7 +386,13 @@ def main():
     
     # TAB 2: Volatility Smile
     with tab2:
-        if st.button("▶️", type="primary", use_container_width=True, key="smile_button"):
+        st.header("Volatility Smile Construction")
+        st.markdown("Generate and recover a synthetic volatility smile using Jaeckel's algorithm")
+        st.markdown("*Adjust parameters in the sidebar*")
+        
+        st.markdown("---")
+        
+        if st.button("Build Volatility Smile", type="primary", use_container_width=True):
             with st.spinner("Building smile..."):
                 # Generate theoretical smile
                 strikes, true_sigmas, option_prices = generate_volatility_smile(
