@@ -160,15 +160,15 @@ def main():
             --text-color: #262626;
         }
         
-        /* Primary buttons - lighter gray */
+        /* Primary buttons - white background */
         .stButton > button[kind="primary"] {
-            background-color: #b0b0b0 !important;
-            color: white !important;
-            border: none !important;
+            background-color: white !important;
+            color: #4a4a4a !important;
+            border: 1px solid #d0d0d0 !important;
         }
         .stButton > button[kind="primary"]:hover {
-            background-color: #999999 !important;
-            border: none !important;
+            background-color: #f5f5f5 !important;
+            border: 1px solid #b0b0b0 !important;
         }
         
         /* Regular buttons - monochrome */
