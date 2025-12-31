@@ -160,14 +160,14 @@ def main():
             --text-color: #262626;
         }
         
-        /* Primary buttons - monochrome */
+        /* Primary buttons - lighter gray */
         .stButton > button[kind="primary"] {
-            background-color: #4a4a4a !important;
+            background-color: #b0b0b0 !important;
             color: white !important;
             border: none !important;
         }
         .stButton > button[kind="primary"]:hover {
-            background-color: #333333 !important;
+            background-color: #999999 !important;
             border: none !important;
         }
         
@@ -319,7 +319,7 @@ def main():
     
     # TAB 1: Single IV Calculation
     with tab1:
-        if st.button("▶️", type="primary", use_container_width=True, key="calc_button"):
+        if st.button("▶️", type="primary", key="calc_button"):
             with st.spinner("Calculating..."):
                 iv, time_ms, iterations, status = calculate_iv_with_timing(
                     price, S, K, T, r, flag='c'
@@ -380,7 +380,7 @@ def main():
     
     # TAB 2: Volatility Smile
     with tab2:
-        if st.button("▶️", type="primary", use_container_width=True, key="smile_button"):
+        if st.button("▶️", type="primary", key="smile_button"):
             with st.spinner("Building smile..."):
                 # Generate theoretical smile
                 strikes, true_sigmas, option_prices = generate_volatility_smile(
