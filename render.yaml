@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: ivdemo
+    runtime: python
+    # Start with 512MB RAM - upgrade to 1GB if Numba needs more memory
+    plan: starter
+    # Singapore region for Tokyo-based clients (lowest latency)
+    region: singapore
+    # Install Python dependencies
+    buildCommand: pip install -r requirements.txt
+    # Run Streamlit - Render provides $PORT dynamically
+    startCommand: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true
+    # Python version
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
