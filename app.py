@@ -240,7 +240,7 @@ def main():
     # Simplified Sidebar
     
     # Nippotica Logo at top
-    st.sidebar.image("nippologo.png", width=200)
+    st.sidebar.image("nippologo.png", width=150)
     st.sidebar.markdown("<br>", unsafe_allow_html=True)  # Add spacing
     
     st.sidebar.title("Parameters")
